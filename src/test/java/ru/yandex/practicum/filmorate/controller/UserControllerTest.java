@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,10 +34,10 @@ class UserControllerTest {
     void shouldApproveUserWithCorrectData() throws ValidationException {
       /* assertTrue(userController.checkIsUserDataCorrect(testUser),
                 "Корректная версия User не прошла проверку");*/
-        Throwable thrown = catchThrowable(() -> {
-            userController.checkIsUserDataCorrect(testUser);
-        });
-        assertThat(thrown).isInstanceOf(ValidationException.class);
+        userController.addUser(testUser);
+        List<User> users = userController.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
     }
 
     @Test

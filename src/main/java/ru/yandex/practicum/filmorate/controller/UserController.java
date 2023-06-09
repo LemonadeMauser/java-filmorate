@@ -21,7 +21,7 @@ public class UserController {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<User> get() {
         return new ArrayList<>(users.values());
     }
 
@@ -71,7 +71,7 @@ public class UserController {
         }
     }*/
 
-    public void checkIsUserDataCorrect(User newUser) throws ValidationException {
+    public static void checkIsUserDataCorrect(User newUser) throws ValidationException {
         String email = newUser.getEmail();
         String login = newUser.getLogin();
         LocalDate birthday = LocalDate.parse(newUser.getBirthday());
