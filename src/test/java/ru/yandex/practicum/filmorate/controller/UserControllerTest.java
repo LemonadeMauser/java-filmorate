@@ -42,7 +42,7 @@ class UserControllerTest {
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
         testUser.setEmail(" ");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setEmail("juan@spok.ar");
+        testUser.setEmail("juanspok.ar");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
     }
 
