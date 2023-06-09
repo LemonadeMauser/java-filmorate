@@ -20,8 +20,8 @@ public class FilmController {
 
     private final Map<Integer, Film> films = new HashMap<>();
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private final Instant MinReleaseData = Instant.from(ZonedDateTime.of(LocalDateTime.of(1895, 12,
-            28, 0, 0), ZoneId.of("Europe/Moscow")));
+    private final Instant minReleaseData = Instant.from(ZonedDateTime.of(LocalDateTime.of(1895, 12,
+            28, 0, 0), ZoneId.of("Europe/Moscow")));// MinReleaseData
 
     @GetMapping
     public List<Film> getAllFilms() {
@@ -58,7 +58,7 @@ public class FilmController {
             log.info("Не удалось добавить/обновить фильм т.к. превышена допустимая длина описания");
             throw new ValidationException("Превышена допустимая длина описания - 200 символов");
         } else if (newFilm.getReleaseDate() == null || getInstance(newFilm.getReleaseDate())
-                .isBefore(MinReleaseData)) {
+                .isBefore(minReleaseData)) {
             log.info("Не удалось добавить/обновить фильм т.к. указана некорректная дата выхода");
             throw new ValidationException("Указана некорректная дата выхода фильма");
         } else if (getDuration(newFilm.getDuration()).isNegative() || getDuration(newFilm.getDuration()).isZero()) {
