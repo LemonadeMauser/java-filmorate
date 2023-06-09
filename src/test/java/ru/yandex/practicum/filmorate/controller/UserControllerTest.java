@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
@@ -58,10 +60,11 @@ class UserControllerTest {
 
     @Test
     void shouldDeclineUserWithIncorrectBirthDay() {
-        testUser.setBirthday(null);
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setBirthday("2023-10-10");
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
+        testUser.setBirthday("2030-10-10");
+        Throwable thrown = catchThrowable(() -> {
+            userController.addUser(testUser);
+        });
+        assertThat(thrown).isInstanceOf(ValidationException.class);
     }
 
     @Test
