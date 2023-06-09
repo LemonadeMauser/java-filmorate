@@ -60,8 +60,10 @@ public class UserController {
             throw new ValidationException("Некорректно указана дата рождения");
         } else if (newUser.getName().isBlank()) {
             newUser.setName(newUser.getLogin());
+            return true;
+        } else {
+            return true;
         }
-        return true;
     }
 
     private Instant getInstance(String time) {
