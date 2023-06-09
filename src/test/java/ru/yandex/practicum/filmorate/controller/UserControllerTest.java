@@ -8,8 +8,8 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
-/*import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;*/
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
@@ -32,12 +32,8 @@ class UserControllerTest {
 
     @Test
     void shouldApproveUserWithCorrectData() throws ValidationException {
-      /* assertTrue(userController.checkIsUserDataCorrect(testUser),
-                "Корректная версия User не прошла проверку");*/
-        userController.addUser(testUser);
-        List<User> users = userController.get();
-        assertNotNull(users);
-        assertEquals(1, users.size());
+      assertTrue(userController.check(testUser),
+                "Корректная версия User не прошла проверку");
     }
 
     @Test

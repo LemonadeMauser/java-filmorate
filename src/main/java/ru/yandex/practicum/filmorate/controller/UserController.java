@@ -53,7 +53,7 @@ public class UserController {
         return newUser;
     }
 
-    /*public boolean checkIsUserDataCorrect(User newUser) throws ValidationException {
+    public boolean check(User newUser) throws ValidationException {
         if (newUser.getEmail() == null || (!newUser.getEmail().contains("@")) || newUser.getEmail().isBlank()) {
             log.info("Не удалось добавить/обновать пользователя т.к. некорректно указан email");
             throw new ValidationException("Указан некорректный email");
@@ -69,7 +69,7 @@ public class UserController {
         } else {
             return true;
         }
-    }*/
+    }
 
     public static void checkIsUserDataCorrect(User newUser) throws ValidationException {
         String email = newUser.getEmail();
