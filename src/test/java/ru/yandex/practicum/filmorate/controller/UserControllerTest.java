@@ -60,7 +60,7 @@ class UserControllerTest {
 
     @Test
     void shouldDeclineUserWithIncorrectBirthDay() {
-        testUser.setBirthday("20400-08-08");
+        testUser.setBirthday("2040-08-08");
         Throwable thrown = catchThrowable(() -> {
             userController.addUser(testUser);
         });
