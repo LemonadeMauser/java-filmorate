@@ -26,11 +26,11 @@ class UserControllerTest {
         testUser.setEmail("Ivan@ivan.ru");
     }
 
-    @Test
+   /* @Test
     void shouldApproveUserWithCorrectData() throws ValidationException {
         assertTrue(userController.checkIsUserDataCorrect(testUser),
                 "Корректная версия User не прошла проверку");
-    }
+    }*/
 
     @Test
     void shouldDeclineUserWithIncorrectEmail() {

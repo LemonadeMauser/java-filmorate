@@ -27,28 +27,33 @@ public class UserController {
 
     @PostMapping
     public User addUser(@Valid @RequestBody User newUser) throws ValidationException {
-        if (checkIsUserDataCorrect(newUser)) {
-            users.put(newUser.getId(), newUser);
+        checkIsUserDataCorrect(newUser);
+        String name = newUser.getName();
+        String login = newUser.getLogin();
+        if (name == null || name.isEmpty()) {
+            newUser.setName(login);
+            log.debug("Для пользователя с логином {} установлено новое имя {}", login, newUser.getName());
         }
+        users.put(newUser.getId(), newUser);
         log.info("Добавлен новый пользователь id={}", newUser.getId());
         return newUser;
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User newUser) throws ValidationException {
-        if (checkIsUserDataCorrect(newUser)) {
-            if (users.containsKey(newUser.getId())) {
-                users.put(newUser.getId(), newUser);
-                log.info("Данные пользователя id = {} обновлены", newUser.getId());
-            } else {
+        checkIsUserDataCorrect(newUser);
+            if (!users.containsKey(newUser.getId())) {
                 throw new ValidationException("Не удалось обновить данные т.к. пользователь id=" + newUser.getId() +
                         " не найден");
+            } else {
+                users.put(newUser.getId(), newUser);
+                log.info("Данные пользователя id = {} обновлены", newUser.getId());
             }
-        }
+
         return newUser;
     }
 
-    public boolean checkIsUserDataCorrect(User newUser) throws ValidationException {
+    /*public boolean checkIsUserDataCorrect(User newUser) throws ValidationException {
         if (newUser.getEmail() == null || (!newUser.getEmail().contains("@")) || newUser.getEmail().isBlank()) {
             log.info("Не удалось добавить/обновать пользователя т.к. некорректно указан email");
             throw new ValidationException("Указан некорректный email");
@@ -63,6 +68,22 @@ public class UserController {
             return true;
         } else {
             return true;
+        }
+    }*/
+
+    public void checkIsUserDataCorrect(User newUser) throws ValidationException {
+        String email = newUser.getEmail();
+        String login = newUser.getLogin();
+        LocalDate birthday = LocalDate.parse(newUser.getBirthday());
+        if (email == null || email.isEmpty() || !email.contains("@")) {
+            log.debug("Электронная почта не указана или не указан символ '@'");
+            throw new ValidationException("Указан некорректный email");
+        } else if (login == null || login.isEmpty() || login.contains(" ")) {
+            log.debug("Логин пользователя с электронной почтой {} не указан или содержит пробел", email);
+            throw new ValidationException("Некорректно указан login");
+        } else if (birthday.isAfter(LocalDate.now())) {
+            log.debug("Дата рождения пользователя с логином {} указана будущим числом", login);
+            throw new ValidationException("Некорректно указана дата рождения");
         }
     }
 
