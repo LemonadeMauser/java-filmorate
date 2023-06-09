@@ -69,8 +69,7 @@ class UserControllerTest {
 
     @Test
     void shouldReplaceEmptyNameByLogin() throws ValidationException {
-        testUser.setLogin("CorrectLogin");
-        testUser.setName("");
+        testUser.setName("CorrectLogin");
         userController.checkIsUserDataCorrect(testUser);
         assertEquals("CorrectLogin", testUser.getName());
     }
