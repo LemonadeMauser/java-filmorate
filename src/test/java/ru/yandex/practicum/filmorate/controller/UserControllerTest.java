@@ -28,7 +28,7 @@ class UserControllerTest {
 
     @Test
     void shouldApproveUserWithCorrectData() throws ValidationException {
-      assertTrue(userController.check(testUser),
+        assertTrue(userController.check(testUser),
                 "Корректная версия User не прошла проверку");
     }
 
