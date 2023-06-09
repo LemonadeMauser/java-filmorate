@@ -9,18 +9,21 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
-@Builder
 public class User {
-    private int id;
+    private static int identificator = 0;
+    private int id = setId();
     @Email
-    @NotNull
-    @NotBlank
     private String email;
-    @NotNull
     @NotBlank
     private String login;
     private String name;
-    private LocalDate birthday;
+    @NotBlank
+    private String birthday;
+
+    public int setId() {
+        return ++identificator;
+    }
 }
+
 
 
