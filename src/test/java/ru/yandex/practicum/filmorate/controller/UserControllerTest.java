@@ -22,16 +22,16 @@ class UserControllerTest {
     @BeforeEach
     void beforeEach() {
         testUser = new User();
-        testUser.setName("Ivan");
-        testUser.setLogin("TestUser");
-        testUser.setBirthday("2010-10-10");
-        testUser.setEmail("Ivan@ivan.ru");
+        testUser.setName("Juan");
+        testUser.setLogin("TestJuan");
+        testUser.setBirthday("2008-08-08");
+        testUser.setEmail("juan@spok.ar");
     }
 
     @Test
     void shouldApproveUserWithCorrectData() throws ValidationException {
         assertTrue(userController.check(testUser),
-                "Корректная версия User не прошла проверку");
+                "Error");
     }
 
     @Test
@@ -42,7 +42,7 @@ class UserControllerTest {
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
         testUser.setEmail(" ");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setEmail("Ivan.ivan.ru");
+        testUser.setEmail("juan@spok.ar ");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
     }
 
@@ -54,13 +54,13 @@ class UserControllerTest {
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
         testUser.setLogin(" ");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setLogin("Ivan ");
+        testUser.setLogin("Juan ");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
     }
 
     @Test
     void shouldDeclineUserWithIncorrectBirthDay() {
-        testUser.setBirthday("2030-10-10");
+        testUser.setBirthday("20400-08-08");
         Throwable thrown = catchThrowable(() -> {
             userController.addUser(testUser);
         });

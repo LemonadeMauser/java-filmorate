@@ -22,7 +22,7 @@ public class UserController {
     private int id;
 
     @GetMapping
-    public List<User> get() {
+    public List<User> getUsers() {
         return new ArrayList<>(users.values());
     }
 
@@ -45,8 +45,7 @@ public class UserController {
     public User updateUser(@Valid @RequestBody User newUser) throws ValidationException {
         checkIsUserDataCorrect(newUser);
             if (!users.containsKey(newUser.getId())) {
-                throw new ValidationException("Не удалось обновить данные т.к. пользователь id=" + newUser.getId() +
-                        " не найден");
+                throw new ValidationException("Ошибка - пользователь id=" + newUser.getId() + " не найден");
             } else {
                 users.put(newUser.getId(), newUser);
                 log.info("Данные пользователя id = {} обновлены", newUser.getId());
@@ -57,13 +56,13 @@ public class UserController {
 
     public boolean check(User newUser) throws ValidationException {
         if (newUser.getEmail() == null || (!newUser.getEmail().contains("@")) || newUser.getEmail().isBlank()) {
-            log.info("Не удалось добавить/обновать пользователя т.к. некорректно указан email");
-            throw new ValidationException("Указан некорректный email");
+            log.info("Ошибка - некорректно указан email");
+            throw new ValidationException("Некорректный email");
         } else if (newUser.getLogin() == null || newUser.getLogin().isBlank() || newUser.getLogin().contains(" ")) {
-            log.info("Не удалось добавить/обновать пользователя т.к. некорректно указан login");
+            log.info("Ошибка - некорректно указан login");
             throw new ValidationException("Некорректно указан login");
         } else if (newUser.getBirthday() == null || getInstance(newUser.getBirthday()).isAfter(Instant.now())) {
-            log.info("Не удалось добавить/обновать пользователя т.к. некорректно указана дата рождения");
+            log.info("Ошибка - некорректно указана дата рождения");
             throw new ValidationException("Некорректно указана дата рождения");
         } else if (newUser.getName().isBlank()) {
             newUser.setName(newUser.getLogin());

@@ -23,14 +23,14 @@ class FilmControllerTest {
         testFilm.setId(100);
         testFilm.setName("TestFilm");
         testFilm.setDescription("Test description");
-        testFilm.setReleaseDate("2010-10-10");
+        testFilm.setReleaseDate("2008-08-08");
         testFilm.setDuration(2);
     }
 
     @Test
     void shouldApproveFilmWithCorrectData() throws ValidationException {
         assertTrue(filmController.checkIsFilmDataCorrect(testFilm),
-                "Корректная версия Film не прошла проверку");
+                "Error");
     }
 
     @Test
@@ -47,15 +47,16 @@ class FilmControllerTest {
     void shouldDeclineFilmWithIncorrectDescription() {
         testFilm.setDescription(null);
         assertThrows(ValidationException.class, () -> filmController.checkIsFilmDataCorrect(testFilm));
-        testFilm.setName("111111111111111111111111111111111111111111111111111111111111111111111111111" +
-                "111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
-                "111111111111111111111111111111111111111111");
+        testFilm.setName("аоаоаоаоаоаоаоаоаоаоаоаоаоаоаоаоаоааоаооаоаоаоааоаоаоаоаоаоаоаоаоаоаоаоаоааооааоаооааоаоааоо" +
+                "аоаоаоаоааоаоаоаоаоаоаоаоаоааоаоаоаоаоаоаоааоаоаоаоаоаоаоаоааоаоаоаоаоаоаоаоаоааоаоа" +
+                "арарарарарарарарарарарарарарарарарарарараррарарарарарарарарараррарарарарарара" +
+                "рарапрарарарпарарпараапрапрарпарапрарапрапрарпапрапрапрапрапрарапрапр");
         assertThrows(ValidationException.class, () -> filmController.checkIsFilmDataCorrect(testFilm));
     }
 
     @Test
     void shouldDeclineFilmWithIncorrectReleaseDate() {
-        testFilm.setReleaseDate("1895-12-27");
+        testFilm.setReleaseDate("1765-12-01");
         assertThrows(ValidationException.class, () -> filmController.checkIsFilmDataCorrect(testFilm));
     }
 

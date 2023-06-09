@@ -44,7 +44,7 @@ public class FilmController {
                 films.put(newFilm.getId(), newFilm);
                 log.info("Обновлены данные о фильме id={}", newFilm.getId());
             } else {
-                throw new ValidationException("Не удалось обновить данные т.к. фильм не найден");
+                throw new ValidationException("Ошибка - фильм не найден");
             }
         }
         return newFilm;
@@ -52,18 +52,18 @@ public class FilmController {
 
     public boolean checkIsFilmDataCorrect(Film newFilm) throws ValidationException {
         if (newFilm.getName() == null || newFilm.getName().isBlank()) {
-            log.info("Не удалось добавить/обновить фильм т.к. не указано название");
+            log.info("Ошибка - не указано название");
             throw new ValidationException("Не указано название фильма");
         } else if (newFilm.getDescription() == null || newFilm.getDescription().length() > 200) {
-            log.info("Не удалось добавить/обновить фильм т.к. превышена допустимая длина описания");
-            throw new ValidationException("Превышена допустимая длина описания - 200 символов");
+            log.info("Ошибка - превышена допустимая длина описания");
+            throw new ValidationException("Превышен лимит в 200 символов");
         } else if (newFilm.getReleaseDate() == null || getInstance(newFilm.getReleaseDate())
                 .isBefore(minRealeaseDate)) {
-            log.info("Не удалось добавить/обновить фильм т.к. указана некорректная дата выхода");
-            throw new ValidationException("Указана некорректная дата выхода фильма");
+            log.info("Ошибка - указана некорректная дата выхода");
+            throw new ValidationException("Некорректная дата выхода фильма");
         } else if (getDuration(newFilm.getDuration()).isNegative() || getDuration(newFilm.getDuration()).isZero()) {
-            log.info("Не удалось добавить/обновить фильм т.к. некорректно указана длительность");
-            throw new ValidationException("Указана некорректная длительность фильма");
+            log.info("Ошибка - некорректно указана длительность");
+            throw new ValidationException("Некорректная длительность фильма");
         } else {
             return true;
         }

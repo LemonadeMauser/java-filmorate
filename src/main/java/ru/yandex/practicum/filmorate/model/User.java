@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class User {
-    private static int identificator = 0;
+
     private int id;
     @Email
     private String email;
@@ -17,9 +17,6 @@ public class User {
     @NotBlank
     private String birthday;
 
-   /* public int setId() {
-        return ++identificator;
-    }*/
 }
 
 
