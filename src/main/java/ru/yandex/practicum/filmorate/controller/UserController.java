@@ -19,6 +19,7 @@ import java.util.Map;
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private int id;
 
     @GetMapping
     public List<User> get() {
@@ -34,6 +35,7 @@ public class UserController {
             newUser.setName(login);
             log.debug("Для пользователя с логином {} установлено новое имя {}", login, newUser.getName());
         }
+        newUser.setId(++this.id);
         users.put(newUser.getId(), newUser);
         log.info("Добавлен новый пользователь id={}", newUser.getId());
         return newUser;
