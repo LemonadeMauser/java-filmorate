@@ -3,72 +3,158 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import java.time.LocalDate;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class UserControllerTest {
-    static UserController userController;
-    static User testUser;
+
+    private static UserController controller;
+    private static User user;
+    private static User userInvalidEmail;
+    private static User userInvalidLogin;
+    private static User userInvalidBirthday;
 
     @BeforeAll
     static void beforeAll() {
-        userController = new UserController();
+        userInvalidEmail = User.builder()
+                .email("email.com")
+                .login("Login")
+                .birthday(LocalDate.of(2022, 12, 12))
+                .id(1)
+                .build();
+        userInvalidLogin = User.builder()
+                .email("my@email.com")
+                .login("Log in")
+                .birthday(LocalDate.of(2022, 12, 12))
+                .id(2)
+                .build();
+        userInvalidBirthday = User.builder()
+                .email("my@email.com")
+                .login("Login")
+                .birthday(LocalDate.of(2023, 12, 12))
+                .id(3)
+                .build();
     }
 
     @BeforeEach
-    void beforeEach() {
-        testUser = new User();
-        testUser.setName("Ivan");
-        testUser.setLogin("TestUser");
-        testUser.setBirthday("2010-10-10");
-        testUser.setEmail("Ivan@ivan.ru");
+    void setUp() {
+        controller = new UserController();
+        user = User.builder()
+                .email("my@email.com")
+                .login("Login")
+                .birthday(LocalDate.of(2022, 12, 12))
+                .id(5)
+                .build();
     }
 
     @Test
-    void shouldApproveUserWithCorrectData() throws ValidationException {
-        assertTrue(userController.checkIsUserDataCorrect(testUser),
-                "Корректная версия User не прошла проверку");
+    void getEmptyListOfUsers() {
+        List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(0, users.size());
     }
 
     @Test
-    void shouldDeclineUserWithIncorrectEmail() {
-        testUser.setEmail(null);
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setEmail("");
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setEmail(" ");
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setEmail("Ivan.ivan.ru");
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
+    void getListOfUsers() {
+        controller.create(user);
+        List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
     }
 
     @Test
-    void shouldDeclineUserWithIncorrectLogin() {
-        testUser.setLogin(null);
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setLogin("");
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setLogin(" ");
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setLogin("Ivan ");
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
+    void createAndValidateUserInvalidEmail() {
+        Throwable thrown = catchThrowable(() -> {
+            controller.create(userInvalidEmail);
+        });
+        assertThat(thrown).isInstanceOf(ValidationException.class);
     }
 
     @Test
-    void shouldDeclineUserWithIncorrectBirthDay() {
-        testUser.setBirthday(null);
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setBirthday("2023-10-10");
-        assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
+    void validateUserInvalidLogin() {
+        Throwable thrown = catchThrowable(() -> {
+            controller.create(userInvalidLogin);
+        });
+        assertThat(thrown).isInstanceOf(ValidationException.class);
     }
 
     @Test
-    void shouldReplaceEmptyNameByLogin() throws ValidationException {
-        testUser.setLogin("CorrectLogin");
-        testUser.setName("");
-        userController.checkIsUserDataCorrect(testUser);
-        assertEquals("CorrectLogin", testUser.getName());
+    void validateUserInvalidBirthday() {
+        Throwable thrown = catchThrowable(() -> {
+            controller.create(userInvalidBirthday);
+        });
+        assertThat(thrown).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    void createAndUpdateUserNoErrors() {
+        controller.create(user);
+        List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        user.setName("Zykin Mikhail");
+        controller.update(user);
+        assertNotNull(users);
+        assertEquals(1, users.size());
+    }
+
+    @Test
+    void createAndUpdateUserInvalidEmail() {
+        controller.create(user);
+        List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        user.setEmail("email.com");
+        Throwable thrown = catchThrowable(() -> {
+            controller.update(user);
+        });
+        assertThat(thrown).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    void createAndUpdateUserInvalidLogin() {
+        controller.create(user);
+        List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        user.setLogin("Log in");
+        Throwable thrown = catchThrowable(() -> {
+            controller.update(user);
+        });
+        assertThat(thrown).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    void createAndUpdateUserInvalidBirthday() {
+        controller.create(user);
+        List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        user.setBirthday(LocalDate.of(2023, 12, 12));
+        Throwable thrown = catchThrowable(() -> {
+            controller.update(user);
+        });
+        assertThat(thrown).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    void createAndUpdateUserInvalidId() {
+        controller.create(user);
+        List<User> users = controller.get();
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        user.setId(2);
+        Throwable thrown = catchThrowable(() -> {
+            controller.update(user);
+        });
+        assertThat(thrown).isInstanceOf(ValidationException.class);
     }
 }
