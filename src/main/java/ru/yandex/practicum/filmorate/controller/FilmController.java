@@ -31,25 +31,24 @@ public class FilmController {
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film newFilm) throws ValidationException {
-        if (checkIsFilmDataCorrect(newFilm)) {
-            films.put(newFilm.getId(), newFilm);
-            newFilm.setId(++this.id);
-            log.info("Добавлен новый фильм id={}", newFilm.getId());
-        }
+        checker(newFilm);
+        newFilm.setId(++this.id);
+        films.put(newFilm.getId(), newFilm);
+        log.debug("Добавлен новый фильм: {}", newFilm);
         return newFilm;
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film newFilm) throws ValidationException {
-        if (checkIsFilmDataCorrect(newFilm)) {
-            if (films.containsKey(newFilm.getId())) {
-                films.put(newFilm.getId(), newFilm);
-                log.info("Обновлены данные о фильме id={}", newFilm.getId());
-            } else {
-                throw new ValidationException("Ошибка - фильм не найден");
-            }
+    public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
+        checker(film);
+        int filmId = film.getId();
+        if (!films.containsKey(filmId)) {
+            log.debug("Не найден фильм в списке с id: {}", filmId);
+            throw new ValidationException("Не найден фильм в списке с id: {}");
         }
-        return newFilm;
+        films.put(filmId, film);
+        log.debug("Обновлены данные фильма с id {}. Новые данные: {}", filmId, film);
+        return film;
     }
 
     public boolean checkIsFilmDataCorrect(Film newFilm) throws ValidationException {
@@ -68,6 +67,26 @@ public class FilmController {
             throw new ValidationException("Некорректная длительность фильма");
         } else {
             return true;
+        }
+    }
+
+    private static void checker(Film film) throws ValidationException {
+        String name = film.getName();
+        String description = film.getDescription();
+        LocalDate releaseDate = LocalDate.parse(film.getReleaseDate());
+        long duration = film.getDuration();
+        if (name == null || name.isEmpty()) {
+            log.debug("Название фильма пустое");
+            throw new ValidationException("Название фильма пустое");
+        } else if (description.length() > 200) {
+            log.debug("Описание фильма {} больше 200 символов", name);
+            throw new ValidationException("Описание фильма {} больше 200 символов");
+        } else if (releaseDate.isBefore(LocalDate.of(1895, 12, 28))) {
+            log.debug("Дата релиза фильма {} раньше 28 декабря 1895 года", name);
+            throw new ValidationException("Дата релиза фильма {} раньше 28 декабря 1895 года");
+        } else if (duration < 0) {
+            log.debug("Продолжительность фильма {} отрицательная", name);
+            throw new ValidationException("Продолжительность фильма {} отрицательная");
         }
     }
 
