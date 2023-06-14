@@ -11,8 +11,8 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
-    static UserController userController;
-    static User testUser;
+    private static UserController userController;
+    private static User testUser;
 
     @BeforeAll
     static void beforeAll() {

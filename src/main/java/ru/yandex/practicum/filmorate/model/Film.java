@@ -9,8 +9,7 @@ import javax.validation.constraints.Size;
 @Data
 public class Film {
 
-    private static int identificator = 0;
-    private int id = setId();
+    private int id;
     @NotBlank
     private String name;
     @Size(max = 200)
@@ -20,7 +19,4 @@ public class Film {
     @Min(1)
     private long duration;
 
-    public int setId() {
-        return ++identificator;
-    }
 }

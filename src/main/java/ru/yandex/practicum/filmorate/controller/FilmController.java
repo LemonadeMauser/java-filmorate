@@ -22,6 +22,7 @@ public class FilmController {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final Instant minRealeaseDate = Instant.from(ZonedDateTime.of(LocalDateTime.of(1895, 12,
             28, 0, 0), ZoneId.of("Europe/Moscow")));
+    private int id;
 
     @GetMapping
     public List<Film> getAllFilms() {
@@ -32,6 +33,7 @@ public class FilmController {
     public Film addFilm(@Valid @RequestBody Film newFilm) throws ValidationException {
         if (checkIsFilmDataCorrect(newFilm)) {
             films.put(newFilm.getId(), newFilm);
+            newFilm.setId(++this.id);
             log.info("Добавлен новый фильм id={}", newFilm.getId());
         }
         return newFilm;

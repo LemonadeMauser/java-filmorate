@@ -9,8 +9,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
-    static FilmController filmController;
-    static Film testFilm;
+    private static FilmController filmController;
+    private static Film testFilm;
 
     @BeforeAll
     static void beforeAll() {
