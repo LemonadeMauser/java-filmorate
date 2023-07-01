@@ -63,8 +63,8 @@ public class FilmValidationTests {
         film = new Film("pelicula", "rerererrewrerwerwerwerwfsdfcjadskplfasdfbsahdfjnklsdfjhjagshvdfbjs" +
                 "Sdasdshgdsgdhjaksdhaghfdahjskajdhaugysdftaghjhiuygtfrdetfyjguhijuhgyfttdsuiofjasdfijksadhfsakdffsd" +
                 "dfghjkljhgvhdabsjdashjdabdashdjasdlsjkdfsfnjskfnsafjkmnvdjfsdnfsjdfasdbnfasdhjfbasdfaksjfsadjfbsdf" +
-                "dasdasdadsasdasdasdadsadasdfsdfsfsdfsdfsdfsdfasdf"
-                , LocalDate.of(2021, 1, 2), 120);
+                "dasdasdadsasdasdasdadsadasdfsdfsfsdfsdfsdfsdfasdf",
+                LocalDate.of(2021, 1, 2), 120);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
         assertThat(violations.size()).isEqualTo(1);
