@@ -11,8 +11,8 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FilmStorageTest {
-    InMemoryFilmStorage filmStorage;
-    Film film;
+    private InMemoryFilmStorage filmStorage;
+    private Film film;
 
     @BeforeEach
     void init() {
