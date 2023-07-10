@@ -59,10 +59,15 @@ public class FilmValidationTests {
 
     @Test
     void descriptionBiggerThen200Test() {
-        film = new Film(1, "Film", "Something about a strange story starring Brad Pitt, where he finds " +
-                "himself in Smolensk and does not understand what the hell is going on with his life and why everything is " +
-                "so depressing around. But he finds a way out of the situation and moves to Kaluga."
-                , LocalDate.of(2021, 1, 2), 120, null, null);
+        film = new Film(1, "Film", "Жмурки es una película rusa de comedia y crimen dirigida por" +
+                "Aleksey Balabanov. Ambientada en la década de 1990, la historia sigue a cuatro amigos que se dedican" +
+                "al negocio ilegal de la venta de armas de fuego. Con un enfoque satírico, la película aborda temas" +
+                "como la corrupción, la violencia y la amistad. A medida que se ven envueltos en situaciones" +
+                "peligrosas, su lealtad y confianza son puestas a prueba. Con una combinación de humor negro" +
+                "y un estilo visual distintivo, Жмурки ofrece una mirada sarcástica a la sociedad rusa de la época." +
+                "¿Podrán estos personajes hilarantes y despiadados sobrevivir a su turbulento mundo criminal?" +
+                "Descúbrelo en esta aclamada película.",
+                LocalDate.of(2021, 1, 2), 120, null, null);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
         assertThat(violations.size()).isEqualTo(1);
