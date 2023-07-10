@@ -69,9 +69,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film update(Film film) {
-        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, " +
-                "duration = ?" +
-                "WHERE id = ?";
+        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ? WHERE id = ?";
         if (film.getMpa() != null) {
             String deleteMpa = "DELETE FROM mpa_films WHERE film_id = ?";
             String updateMpa = "INSERT INTO mpa_films (film_id, mpa_id) VALUES (?, ?)";
@@ -82,31 +80,33 @@ public class FilmDbStorage implements FilmStorage {
         if (film.getGenres() != null) {
             String deleteGenres = "DELETE FROM film_genre WHERE film_id = ?";
             String updateGenres = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
+            Set<Integer> existingGenreIds = new HashSet<>();
 
             jdbcTemplate.update(deleteGenres, film.getId());
 
-            List<Object[]> batchArgs = new ArrayList<>();
-
             for (Genre g : film.getGenres()) {
-                String checkDuplicate = "SELECT * FROM film_genre WHERE film_id = ? AND genre_id = ?";
-                SqlRowSet checkRows = jdbcTemplate.queryForRowSet(checkDuplicate, film.getId(), g.getId());
-                if (!checkRows.next()) {
-                    batchArgs.add(new Object[]{film.getId(), g.getId()});
+                existingGenreIds.add(g.getId());
+            }
+
+            for (Integer genreId : existingGenreIds) {
+                String checkDuplicate = "SELECT COUNT(*) FROM film_genre WHERE film_id = ? AND genre_id = ?";
+                int count = jdbcTemplate.queryForObject(checkDuplicate, Integer.class, film.getId(), genreId);
+                if (count == 0) {
+                    jdbcTemplate.update(updateGenres, film.getId(), genreId);
                 }
             }
-            jdbcTemplate.batchUpdate(updateGenres, batchArgs);
 
             film.setGenres(findGenres(film.getId()));
         }
-
-        jdbcTemplate.update(sql, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getId());
+        jdbcTemplate.update(sql, film.getName(), film.getDescription(), film.getReleaseDate(),
+                film.getDuration(), film.getId());
 
         return film;
-
     }
 
 
-//    @Override
+
+    //   @Override
 //    public Film update(Film film) {
 //        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, " +
 //                "duration = ?" +
