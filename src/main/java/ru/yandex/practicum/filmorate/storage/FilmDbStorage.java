@@ -82,22 +82,60 @@ public class FilmDbStorage implements FilmStorage {
         if (film.getGenres() != null) {
             String deleteGenres = "DELETE FROM film_genre WHERE film_id = ?";
             String updateGenres = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
+
             jdbcTemplate.update(deleteGenres, film.getId());
+
+            List<Object[]> batchArgs = new ArrayList<>();
+
             for (Genre g : film.getGenres()) {
                 String checkDuplicate = "SELECT * FROM film_genre WHERE film_id = ? AND genre_id = ?";
                 SqlRowSet checkRows = jdbcTemplate.queryForRowSet(checkDuplicate, film.getId(), g.getId());
                 if (!checkRows.next()) {
-                    jdbcTemplate.update(updateGenres, film.getId(), g.getId());
+                    batchArgs.add(new Object[]{film.getId(), g.getId()});
                 }
-                film.setGenres(findGenres(film.getId()));
             }
+            jdbcTemplate.batchUpdate(updateGenres, batchArgs);
+
+            film.setGenres(findGenres(film.getId()));
         }
-        jdbcTemplate.update(sql,
-                film.getName(), film.getDescription(), film.getReleaseDate(),
-                film.getDuration(), film.getId());
+
+        jdbcTemplate.update(sql, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getId());
 
         return film;
+
     }
+
+//    @Override
+//    public Film update(Film film) {
+//        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, " +
+//                "duration = ?" +
+//                "WHERE id = ?";
+//        if (film.getMpa() != null) {
+//            String deleteMpa = "DELETE FROM mpa_films WHERE film_id = ?";
+//            String updateMpa = "INSERT INTO mpa_films (film_id, mpa_id) VALUES (?, ?)";
+//            jdbcTemplate.update(deleteMpa, film.getId());
+//            jdbcTemplate.update(updateMpa, film.getId(), film.getMpa().getId());
+//            film.setMpa(findMpa(film.getId()));
+//        }
+//        if (film.getGenres() != null) {
+//            String deleteGenres = "DELETE FROM film_genre WHERE film_id = ?";
+//            String updateGenres = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
+//            jdbcTemplate.update(deleteGenres, film.getId());
+//            for (Genre g : film.getGenres()) {
+//                String checkDuplicate = "SELECT * FROM film_genre WHERE film_id = ? AND genre_id = ?";
+//                SqlRowSet checkRows = jdbcTemplate.queryForRowSet(checkDuplicate, film.getId(), g.getId());
+//                if (!checkRows.next()) {
+//                    jdbcTemplate.update(updateGenres, film.getId(), g.getId());
+//                }
+//                film.setGenres(findGenres(film.getId()));
+//            }
+//        }
+//        jdbcTemplate.update(sql,
+//                film.getName(), film.getDescription(), film.getReleaseDate(),
+//                film.getDuration(), film.getId());
+//
+//        return film;
+//    }
 
     @Override
     public Optional<Film> getById(int id) {
