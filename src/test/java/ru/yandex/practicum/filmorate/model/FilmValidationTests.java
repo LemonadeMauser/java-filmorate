@@ -1,7 +1,6 @@
-package ru.yandex.practicum.filmorate.controller.model;
+package ru.yandex.practicum.filmorate.model;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -21,14 +20,14 @@ public class FilmValidationTests {
 
     @Test
     void rightFieldsValidationTest() {
-        film = new Film("pelicula", "aqui tiene una buena historia", LocalDate.of(2021, 1, 2), 120);
+        film = new Film(1, "Film", "Something about good story", LocalDate.of(2021, 1, 2), 120, null, null);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertTrue(violations.isEmpty());
     }
 
     @Test
     void nullNameValidationTest() {
-        film = new Film(null, "aqui tiene una buena historia", LocalDate.of(2021, 1, 2), 120);
+        film = new Film(1, null, "Something about good story", LocalDate.of(2021, 1, 2), 120, null, null);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
         assertThat(violations.size()).isEqualTo(1);
@@ -36,7 +35,7 @@ public class FilmValidationTests {
 
     @Test
     void blankNameValidationTest() {
-        film = new Film(" ", "aqui tiene una buena historia", LocalDate.of(1896, 1, 2), 60);
+        film = new Film(1, " ", "Something", LocalDate.of(1896, 1, 2), 60, null, null);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
         assertThat(violations.size()).isEqualTo(1);
@@ -44,7 +43,7 @@ public class FilmValidationTests {
 
     @Test
     void nullDescriptionTest() {
-        film = new Film("pelicula", null, LocalDate.of(2021, 1, 2), 120);
+        film = new Film(1, "Film", null, LocalDate.of(2021, 1, 2), 120, null, null);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
         assertThat(violations.size()).isEqualTo(1);
@@ -52,7 +51,7 @@ public class FilmValidationTests {
 
     @Test
     void emptyDescriptionTest() {
-        film = new Film("pelicula", "", LocalDate.of(2021, 1, 2), 120);
+        film = new Film(1, "Film", "", LocalDate.of(2021, 1, 2), 120, null, null);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
         assertThat(violations.size()).isEqualTo(1);
@@ -60,11 +59,10 @@ public class FilmValidationTests {
 
     @Test
     void descriptionBiggerThen200Test() {
-        film = new Film("pelicula", "rerererrewrerwerwerwerwfsdfcjadskplfasdfbsahdfjnklsdfjhjagshvdfbjs" +
-                "Sdasdshgdsgdhjaksdhaghfdahjskajdhaugysdftaghjhiuygtfrdetfyjguhijuhgyfttdsuiofjasdfijksadhfsakdffsd" +
-                "dfghjkljhgvhdabsjdashjdabdashdjasdlsjkdfsfnjskfnsafjkmnvdjfsdnfsjdfasdbnfasdhjfbasdfaksjfsadjfbsdf" +
-                "dasdasdadsasdasdasdadsadasdfsdfsfsdfsdfsdfsdfasdf",
-                LocalDate.of(2021, 1, 2), 120);
+        film = new Film(1, "Film", "Something about a strange story starring Brad Pitt, where he finds " +
+                "himself in Smolensk and does not understand what the hell is going on with his life and why everything is " +
+                "so depressing around. But he finds a way out of the situation and moves to Kaluga."
+                , LocalDate.of(2021, 1, 2), 120, null, null);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
         assertThat(violations.size()).isEqualTo(1);
@@ -72,7 +70,7 @@ public class FilmValidationTests {
 
     @Test
     void durationLessThen1MinuteTest() {
-        film = new Film("pelicula", "aqui tiene una buena historia", LocalDate.of(2021, 1, 2), 0);
+        film = new Film(1, "Film", "Something about good story", LocalDate.of(2021, 1, 2), 0, null, null);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
         assertThat(violations.size()).isEqualTo(1);
