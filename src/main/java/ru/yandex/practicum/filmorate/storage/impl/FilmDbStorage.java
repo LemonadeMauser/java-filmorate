@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.*;
-import ru.yandex.practicum.filmorate.storage.interf.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.*;
 import java.sql.Date;
@@ -103,40 +103,6 @@ public class FilmDbStorage implements FilmStorage {
 
         return film;
     }
-
-
-
-    //   @Override
-//    public Film update(Film film) {
-//        String sql = "UPDATE films SET name = ?, description = ?, release_date = ?, " +
-//                "duration = ?" +
-//                "WHERE id = ?";
-//        if (film.getMpa() != null) {
-//            String deleteMpa = "DELETE FROM mpa_films WHERE film_id = ?";
-//            String updateMpa = "INSERT INTO mpa_films (film_id, mpa_id) VALUES (?, ?)";
-//            jdbcTemplate.update(deleteMpa, film.getId());
-//            jdbcTemplate.update(updateMpa, film.getId(), film.getMpa().getId());
-//            film.setMpa(findMpa(film.getId()));
-//        }
-//        if (film.getGenres() != null) {
-//            String deleteGenres = "DELETE FROM film_genre WHERE film_id = ?";
-//            String updateGenres = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
-//            jdbcTemplate.update(deleteGenres, film.getId());
-//            for (Genre g : film.getGenres()) {
-//                String checkDuplicate = "SELECT * FROM film_genre WHERE film_id = ? AND genre_id = ?";
-//                SqlRowSet checkRows = jdbcTemplate.queryForRowSet(checkDuplicate, film.getId(), g.getId());
-//                if (!checkRows.next()) {
-//                    jdbcTemplate.update(updateGenres, film.getId(), g.getId());
-//                }
-//                film.setGenres(findGenres(film.getId()));
-//            }
-//        }
-//        jdbcTemplate.update(sql,
-//                film.getName(), film.getDescription(), film.getReleaseDate(),
-//                film.getDuration(), film.getId());
-//
-//        return film;
-//    }
 
     @Override
     public Optional<Film> getById(int id) {
