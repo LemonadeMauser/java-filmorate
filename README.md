@@ -1,3 +1,3 @@
 # java-filmorate
 Template repository for Filmorate project.
-![Диаграмма](dsa.png)
+![Диаграмма](dsa.png) 
